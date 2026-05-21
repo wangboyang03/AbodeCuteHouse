@@ -91,6 +91,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  fluttertoast:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "5720f389528548b2785f40e957ae7167ec6f5fa4"
+      url: "https://gitcode.com/openharmony-sig/flutter_fluttertoast.git"
+    source: git
+    version: "8.2.2"
   http_parser:
     dependency: transitive
     description:

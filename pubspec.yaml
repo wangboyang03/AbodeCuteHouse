@@ -35,6 +35,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   dio: ^5.9.2
+  fluttertoast:
+    git:
+      url: https://gitcode.com/openharmony-sig/flutter_fluttertoast.git # 鸿蒙化仓库地址
 
 dev_dependencies:
   flutter_test:
