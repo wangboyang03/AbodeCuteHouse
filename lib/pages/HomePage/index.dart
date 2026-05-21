@@ -18,11 +18,12 @@ class HomePageViewState extends State<HomePageView> {
   // 获取公告列表内容
   getAnnounceListContent() async {
     final result = await getAnnounceListApi();
-    showDialog(context: context, builder: (context) {
-      return AlertDialog(
-        content: Text(result.toString()),
-      );
-    });
+    // showDialog(context: context, builder: (context) {
+    //   return AlertDialog(
+    //     content: Text(result.toString()),
+    //   );
+    // });
+    print(result); // 打印到调试台
   }
 
   @override Widget build(BuildContext context) {

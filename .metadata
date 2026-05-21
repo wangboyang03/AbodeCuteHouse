@@ -15,7 +15,10 @@ migration:
     - platform: root
       create_revision: 50e8dd668fbc8a752eb904e9c1b4f3a995498d13
       base_revision: 50e8dd668fbc8a752eb904e9c1b4f3a995498d13
-    - platform: ohos
+    - platform: android
+      create_revision: 50e8dd668fbc8a752eb904e9c1b4f3a995498d13
+      base_revision: 50e8dd668fbc8a752eb904e9c1b4f3a995498d13
+    - platform: web
       create_revision: 50e8dd668fbc8a752eb904e9c1b4f3a995498d13
       base_revision: 50e8dd668fbc8a752eb904e9c1b4f3a995498d13
 
