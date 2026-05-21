@@ -1,16 +1,59 @@
+import 'package:abode_cute_house/pages/HomePage/index.dart';
+import 'package:abode_cute_house/pages/MinePage/index.dart';
 import 'package:flutter/material.dart';
 
 class TabsPage extends StatefulWidget {
   const TabsPage({Key? key}) : super(key: key);
   @override _TabsPageState createState()=> _TabsPageState();
-  
 }
 
 class _TabsPageState extends State<TabsPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: const Text('主页'),
+  int currentIndex = 0; // 当前选中的TabBar索引
+  final List _tabBarList = [
+    {
+      'icon': 'assets/tabs/home_default.png',
+      'label': '首页',
+      'activeIcon': 'assets/tabs/home_active.png',
+    },
+    {
+      'icon': 'assets/tabs/my_default.png',
+      'label': '我的',
+      'activeIcon': 'assets/tabs/my_active.png',
+    }
+  ];
+
+  // 实现底Tab布局的方法
+  List <BottomNavigationBarItem> buildTabBar() {
+    List <BottomNavigationBarItem> tabBarList = [];
+    for(var a=0; a<_tabBarList.length; a++) {
+      tabBarList.add(
+        BottomNavigationBarItem(
+          label: _tabBarList[a]["label"],
+          icon: Image.asset(_tabBarList[a]["icon"], width: 30, height: 30),
+          activeIcon: Image.asset(_tabBarList[a]["activeIcon"], width: 30, height: 30),
+        )
+      );
+    }
+    return tabBarList;
+  }
+
+  @override Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(child: IndexedStack(
+        index: currentIndex,
+        children: const [
+          HomePageView(),
+          MineView(),
+        ],
+      )),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex, 
+        onTap: (index) {
+          currentIndex = index;
+          setState(() {});
+        },
+        items: buildTabBar(),
+        ),
     );
   }
 }
