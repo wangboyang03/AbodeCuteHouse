@@ -3,3 +3,7 @@ class Constants {
   static const int NEW_WORK_TIME_OUT = 10; // 网络请求超时时间 单位秒
   static const int SUCCESS_CODE = 10000; // 成功业务码
 }
+
+class HTTP_API {
+  static const String ANNOUNCE_LIST = 'announcement'; // 公告列表接口
+}

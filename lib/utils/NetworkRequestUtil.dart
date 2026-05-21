@@ -18,7 +18,7 @@ class NetworkRequestUtil {
   upload(String url) {}
 
   // 处理返回数据
-  dynamic handleResponse(Future<Response<dynamic>> task) async {
+  handleResponse(Future<Response<dynamic>> task) async {
     final result = await task;
     // 通过业务码判断
     if (result.data['code'] == Constants.SUCCESS_CODE) {
@@ -28,7 +28,7 @@ class NetworkRequestUtil {
     throw DioException(requestOptions: result.requestOptions); // rejected
   }
 
-  NetworkRequest() {
+  NetworkRequestUtil() {
     dio.options.baseUrl = Constants.BASE_URL;
     dio.options.connectTimeout = const Duration(seconds: Constants.NEW_WORK_TIME_OUT);
     dio.options.receiveTimeout = const Duration(seconds: Constants.NEW_WORK_TIME_OUT);
