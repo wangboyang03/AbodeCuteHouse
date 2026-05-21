@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'components/homepageList.dart';
+import 'components/homepageNavigation.dart';
 
 class HomePageView extends StatefulWidget {
   const HomePageView({Key? key}) : super(key: key);
@@ -7,8 +9,20 @@ class HomePageView extends StatefulWidget {
 
 class _HomePageViewState extends State<HomePageView> {
   @override Widget build(BuildContext context) {
-    return Container(
-      child: const Text('首页'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("宅萌居"),
+        centerTitle: true, // 标题居中
+      ),
+      body: ListView(
+        scrollDirection: Axis.vertical, // 垂直方向布局
+        children: [
+          const HomePageNavigation(), // 导航栏
+          Image.asset('assets/images/banner@2x.jpg'), // 横幅
+          const HomePageList(), // 列表
+        ],
+        // 设置列表纵向滚动
+      ),
     );
   }
 }
