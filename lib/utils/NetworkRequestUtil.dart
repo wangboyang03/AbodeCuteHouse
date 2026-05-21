@@ -4,16 +4,16 @@ import '../constants/index.dart';
 class NetworkRequestUtil {
   final dio = Dio();
   get(String url, {Map<String, dynamic>? params}) {
-    return dio.get(url, queryParameters: params);
+    return handleResponse(dio.get(url, queryParameters: params));
   }
   post(String url, {Map<String, dynamic>? data}) {
-    return dio.post(url, data: data);
+    return handleResponse(dio.post(url, data: data));
   }
   put(String url, {Map<String, dynamic>? data}) {
-    return dio.put(url, data: data);
+    return handleResponse(dio.put(url, data: data));
   }
   delete(String url, {Map<String, dynamic>? data, Map<String, dynamic>? params}) {
-    return dio.delete(url, data: data, queryParameters: params);
+    return handleResponse(dio.delete(url, data: data, queryParameters: params));
   }
   upload(String url) {}
 

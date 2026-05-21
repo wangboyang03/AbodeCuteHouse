@@ -9,6 +9,7 @@ class HomePageView extends StatefulWidget {
 }
 
 class HomePageViewState extends State<HomePageView> {
+  List announceList = [];
   // 初始化
   @override void initState() {
     super.initState();
@@ -23,7 +24,9 @@ class HomePageViewState extends State<HomePageView> {
     //     content: Text(result.toString()),
     //   );
     // });
-    print(result); // 打印到调试台
+    // print(result); // 打印到调试台
+    announceList = result;
+    setState(() {});
   }
 
   @override Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class HomePageViewState extends State<HomePageView> {
         children: [
           const HomePageNavigation(), // 导航栏
           Image.asset('assets/images/banner@2x.jpg'), // 横幅
-          const HomePageList(), // 列表
+          HomePageList(announceList: announceList,), // 列表
         ],
         // 设置列表纵向滚动
       ),

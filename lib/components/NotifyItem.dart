@@ -19,7 +19,7 @@ class _NotifyItemState extends State<NotifyItem> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.item["title"],
+              widget.item["title"] ?? "",
               textAlign: TextAlign.left,
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
@@ -30,7 +30,7 @@ class _NotifyItemState extends State<NotifyItem> {
               height: 10,
             ),
             Text(
-              widget.item["content"],
+              widget.item["content"] ?? "",
               textAlign: TextAlign.left,
               style: const TextStyle(
                   color: Color.fromARGB(255, 103, 101, 101), fontSize: 16),
@@ -39,7 +39,7 @@ class _NotifyItemState extends State<NotifyItem> {
               height: 10,
             ),
             Text(
-              widget.item["createAt"],
+              widget.item["createAt"] ?? "",
               textAlign: TextAlign.left,
               style: const TextStyle(
                   color: Color.fromARGB(255, 202, 200, 200), fontSize: 14),
