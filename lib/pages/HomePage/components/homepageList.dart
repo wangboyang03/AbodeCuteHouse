@@ -24,12 +24,18 @@ class _HomePageListState extends State<HomePageList> {
   }
 
   // 获取渲染内容
-  Widget getListContainer() {
+  Widget getListContainer(BuildContext context) {
     return ListView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       children: widget.announceList.map((item) {
-        return NotifyItem(item: item);
+        return GestureDetector(
+          onTap: () {
+            // 点击通过路由跳转通知详情页 携带id参数
+            Navigator.pushNamed(context, "/notificationDetailsPage", arguments: {"id": item["id"]});
+          },
+          child: NotifyItem(item: item),
+        );
       }).toList(),
     );
   }
@@ -37,7 +43,7 @@ class _HomePageListState extends State<HomePageList> {
   @override Widget build(BuildContext context) {
     return Container(
       child: Column(
-        children: [getTitleWidget(), getListContainer()],
+        children: [getTitleWidget(), getListContainer(context)],
       ),
     );
   }

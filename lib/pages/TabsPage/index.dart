@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class TabsPage extends StatefulWidget {
   const TabsPage({Key? key}) : super(key: key);
-  @override _TabsPageState createState()=> _TabsPageState();
+  @override TabsPageState createState()=> TabsPageState();
 }
 
-class _TabsPageState extends State<TabsPage> {
+class TabsPageState extends State<TabsPage> {
   int currentIndex = 0; // 当前选中的TabBar索引
   final List _tabBarList = [
     {
