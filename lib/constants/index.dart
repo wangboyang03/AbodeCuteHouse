@@ -7,4 +7,5 @@ class Constants {
 
 class HTTP_API {
   static const String ANNOUNCE_LIST = 'announcement'; // 公告列表接口
+  static const String SEND_MESSAGE_CODE = "/code"; // 发送验证码接口
 }

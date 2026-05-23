@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:abode_cute_house/api/user.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/CustomToastUtil.dart';
@@ -12,9 +13,33 @@ class LoginPage extends StatefulWidget {
 class LoginPageViewState extends State<LoginPage> {
   int count = 60; // 获取短信验证码冷却倒计时
   Timer? timer;
+  bool isSending = false; // 是否正在发送验证码
+  TextEditingController phoneController = TextEditingController(); // 绑定手机号表单控制器
+  TextEditingController codeController = TextEditingController(); // 绑定验证码表单控制器
 
   // 开始请求倒计时
-  void beginCountDown() {
+  Future<void> beginCountDown() async {
+    // 前置检查
+    if (!!isSending) {
+      return;
+    }
+    if (phoneController.text.isEmpty) {
+      PromptAction.showToast("请先输入手机号才能获取验证码");
+      return;
+    }
+    // 正则表达式校验手机号码 以1开头 第二位是3~9 后面还有9位数字 总长度11位
+    if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(phoneController.text)) {
+      PromptAction.showToast("请输入正确的手机号");
+      return;
+    }
+    isSending = true; // 校验通过 开始发送验证码
+    final result = await sendMessageCodeApi({"mobile": phoneController.text});
+    // 延迟3秒后自动填充到输入框
+    Future.delayed(Duration(seconds: 3), () {
+      codeController.text = result["code"];
+    });
+    // PromptAction.showToast(result["code"]);
+    
     // 在新的一轮倒计时开始前先判断是否上一轮已经结束
     if (count == 60) {
       // 开始倒计时
@@ -67,7 +92,10 @@ class LoginPageViewState extends State<LoginPage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center, // 垂直方向居中对齐
               children: [
-                const Expanded(child: TextField(decoration: InputDecoration(labelText: '手机号', hintText: '请输入手机号'))),
+                Expanded(child: TextField(
+                  controller: phoneController,
+                  decoration: const InputDecoration(labelText: '手机号', hintText: '请输入手机号'))
+                ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -83,7 +111,10 @@ class LoginPageViewState extends State<LoginPage> {
               ],
             ),
             const SizedBox(height: 8),
-            const TextField(decoration: InputDecoration(labelText: '验证码', hintText: '请输入6位验证码')),
+            TextField(
+              controller: codeController,
+              decoration: InputDecoration(labelText: '验证码', hintText: '请输入6位验证码')
+            ),
             const SizedBox(height: 8),
             const Row(
               children: [Text('未注册手机号经验证后将自动登录', style: TextStyle(fontSize: 12, color: Colors.grey))]
