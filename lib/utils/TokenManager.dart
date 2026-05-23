@@ -2,8 +2,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/index.dart';
 
 class TokenManager {
+  String token = "";
+
   Future<SharedPreferences> getInstance() {
     return SharedPreferences.getInstance();
+  }
+
+  // 初始化token
+  init() async {
+    final preferences = await getInstance(); // 获取实例
+    token = preferences.getString(Constants.TOKEN_KEY) ?? "";
   }
 
   // 存储token
@@ -13,9 +21,8 @@ class TokenManager {
   }
 
   // 获取token
-  Future<String> getToken() async {
-    final preferences = await getInstance(); // 获取实例
-    return preferences.getString(Constants.TOKEN_KEY) ?? "";
+  String getToken() {
+    return token;
   }
 
   // 清除token

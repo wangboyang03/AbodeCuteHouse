@@ -18,20 +18,19 @@ Widget getRouterWidget() {
     initialRoute: '/', // 指定初始路由为r入口
     onGenerateRoute: (setting) {
       // 动态路由池
-      // flutter 要求不能在UI绘制时获取异步操作的结果 路由表不得有async/await
-      // String token = tokenManager.getToken(); // 获取token
-      // if (token.isEmpty) {
-      //   // 如果读不到token 直接去登录页
-      //   return MaterialPageRoute(
-      //     builder: (context) => const LoginPage(),
-      //   );
-      // }
-      // if (setting.name == "/profilePage") {
-      //   return MaterialPageRoute(
-      //     builder: (context) => const ProfilePage(),
-      //   );
-      // }
-      return null;
+      // flutter 要求不能在UI绘制时执行异步操作 但读取token涉及I/O操作
+      String token = tokenManager.getToken(); // 获取token
+      if (token.isEmpty) {
+        // 如果读不到token 直接去登录页
+        return MaterialPageRoute(
+          builder: (context) => const LoginPage(),
+        );
+      }
+      if (setting.name == "/profilePage") {
+        return MaterialPageRoute(
+          builder: (context) => const ProfilePage(),
+        );
+      }
     }
   );
 }
