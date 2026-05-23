@@ -74,7 +74,7 @@ class LoginPageViewState extends State<LoginPage> {
     // 调用登录接口
     final result = await loginApi({"mobile": phoneController.text, "code": codeController.text,});
     // 存储token到全局状态
-    tokenManager.setToken(result["token"]);
+    tokenManager.setToken(result["token"], refreshToken: result["refreshToken"]);
     PromptAction.showSuccess("登录成功");
     Navigator.pop(context); // 返回上一个页面
   }
