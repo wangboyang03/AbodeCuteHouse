@@ -21,7 +21,9 @@ class _MineViewState extends State<MineView> {
           const Spacer(),
           // 完善信息按钮
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/profilePage');
+            },
             child: const Row(
               children: [
                 Text('完善信息', style: TextStyle(color: Colors.white, fontSize: 14)),

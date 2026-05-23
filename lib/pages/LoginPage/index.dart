@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+import '../../utils/CustomToastUtil.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -6,6 +10,43 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageViewState extends State<LoginPage> {
+  int count = 60; // 获取短信验证码冷却倒计时
+  Timer? timer;
+
+  // 开始请求倒计时
+  void beginCountDown() {
+    // 在新的一轮倒计时开始前先判断是否上一轮已经结束
+    if (count == 60) {
+      // 开始倒计时
+      timer = Timer.periodic(const Duration(seconds: 1), (timer){
+         if (count == 0) {
+          timer.cancel(); // 倒计时结束 取消定时器
+          count = 60; // 重置倒计时时间
+          setState(() {});
+          return; // 结束执行
+         }
+         count--;
+         setState(() {});
+      });
+    } else {
+      // 倒计时没结束 没有道理再开一个定时器
+      PromptAction.showWarning("请等到60s结束再发送");
+    }
+  }
+
+  // 销毁事件中的定时器
+  @override void dispose() {
+    timer?.cancel(); // 取消定时器
+    super.dispose();
+  }
+
+  // 获取验证码组件
+  Widget getTimeShow() {
+    if (count == 60) {
+      return const Text('获取验证码');
+    }
+    return Text('${count}s', style: TextStyle(color: Colors.grey));
+  }
   @override Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -34,8 +75,10 @@ class LoginPageViewState extends State<LoginPage> {
                     foregroundColor: const Color.fromARGB(255, 85, 145, 175),
                     minimumSize: const Size(100, 50)
                   ),
-                  child: const Text('获取验证码'),
-                  onPressed: () {}
+                  child: getTimeShow(),
+                  onPressed: () {
+                    beginCountDown();
+                  }
                 )
               ],
             ),

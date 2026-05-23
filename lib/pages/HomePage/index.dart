@@ -45,21 +45,6 @@ class HomePageViewState extends State<HomePageView> {
         scrollDirection: Axis.vertical, // 垂直方向布局
         children: [
           const HomePageNavigation(), // 导航栏
-            ElevatedButton(
-              onPressed: () {
-                // 开始倒计时 定时器的执行频率为1秒
-                timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                  down--;
-                  setState(() {});
-                  });
-                },
-                child: Text("开始")
-              ),
-              Text("${down}s"),
-              ElevatedButton(
-                onPressed: () {timer?.cancel();},
-                child: Text("停止")
-              ),
           Image.asset('assets/images/banner@2x.jpg'), // 横幅
           HomePageList(announceList: announceList,), // 列表
         ],
