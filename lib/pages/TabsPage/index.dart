@@ -48,9 +48,11 @@ class TabsPageState extends State<TabsPage> {
     return Scaffold(
       body: SafeArea(child: IndexedStack(
         index: currentIndex,
-        children: const [
-          HomePageView(),
-          MineView(),
+        children: [
+          const HomePageView(),
+          MineView(
+            activeIndex: currentIndex,
+          ),
         ],
       )),
       bottomNavigationBar: BottomNavigationBar(

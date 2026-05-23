@@ -1,11 +1,47 @@
+import 'package:abode_cute_house/api/user.dart';
+import 'package:abode_cute_house/utils/CustomToastUtil.dart';
 import 'package:flutter/material.dart';
 
 class MineView extends StatefulWidget {
-  const MineView({Key? key}) : super(key: key);
+  final int? activeIndex;
+  const MineView({Key? key, required this.activeIndex}) : super(key: key);
   @override _MineViewState createState() => _MineViewState();
 }
 
 class _MineViewState extends State<MineView> {
+  Map<String, dynamic> userInformationContent = {"id": "", "avatar": "", "nickName": ""};
+  @override void didUpdateWidget(covariant MineView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.activeIndex == 1) {
+      getUserInformation();
+    }
+  }
+
+  // 获取用户信息
+  getUserInformation() async {
+    final result = await getUserInformationApi();
+    userInformationContent = result;
+    PromptAction.showToast(userInformationContent["nickName"]);
+    setState(() {}); // 响应式更新
+  }
+
+  // 获取用户头像和用户名
+  Widget getUserAvatar() {
+    if (userInformationContent["avatar"]!= "") {
+      return Image.network(userInformationContent["avatar"], width: 50, height: 50, fit: BoxFit.cover);
+    } else {
+      return Image.asset('assets/images/avatar_1.jpg', width: 50, height: 50, fit: BoxFit.cover);
+    }
+  }
+
+  String getUserNickName() {
+    String? nickName = userInformationContent["nickName"];
+    if (nickName == null || nickName.isEmpty) {
+      return "用户名";
+    }
+    return nickName;
+  }
+
   // 1.顶部区域
   Widget buildTopWidget() {
     return Container(
@@ -14,10 +50,10 @@ class _MineViewState extends State<MineView> {
       child: Row(
         children: [
           // 头像
-          ClipRRect(borderRadius: BorderRadius.circular(25),child: Image.asset('assets/images/avatar_1.jpg', width: 50, height: 50, fit: BoxFit.cover)),
+          ClipRRect(borderRadius: BorderRadius.circular(25),child: getUserAvatar()),
           const SizedBox(width: 15),
           // 用户名
-          const Text('用户名', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(getUserNickName(), style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
           const Spacer(),
           // 完善信息按钮
           GestureDetector(
