@@ -1,13 +1,8 @@
-import 'package:abode_cute_house/pages/TabsPage/index.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/NotificationDetailsPage/index.dart';
+import 'routes/index.dart';
 
 void main() {
-  runApp(MaterialApp(
-    routes: {
-      "/": (context) => const TabsPage(),
-      "/notificationDetailsPage": (context) => const NotificationDetailsPage(),
-    },
-  ));
+  // tokenManager.init(); // 实例化首选项并获取token
+  runApp(getRouterWidget()); // 从路由表中获取路由并启动app
 }
