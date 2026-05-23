@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../constants/index.dart';
+import 'TokenManager.dart';
 
 class NetworkRequestUtil {
   final dio = Dio();
@@ -37,7 +38,10 @@ class NetworkRequestUtil {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (context, handler) {
         // 请求拦截器
-        // 注入token...
+        String token = tokenManager.getToken();
+        if (!token.isEmpty) {
+          context.headers["Authorization"] = 'Bearer ${token}';
+        }
         handler.next(context);
       },onResponse: (context, handler) {
         // 需要判断Http状态码 只有2XX才认为是成功请求
