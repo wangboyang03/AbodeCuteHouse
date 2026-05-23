@@ -4,6 +4,7 @@ import 'package:abode_cute_house/api/user.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/CustomToastUtil.dart';
+import '../../utils/TokenManager.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -39,7 +40,7 @@ class LoginPageViewState extends State<LoginPage> {
       codeController.text = result["code"];
     });
     // PromptAction.showToast(result["code"]);
-    
+
     // 在新的一轮倒计时开始前先判断是否上一轮已经结束
     if (count == 60) {
       // 开始倒计时
@@ -57,6 +58,25 @@ class LoginPageViewState extends State<LoginPage> {
       // 倒计时没结束 没有道理再开一个定时器
       PromptAction.showWarning("请等到60s结束再发送");
     }
+  }
+
+  // 登录逻辑实现
+  login() async {
+    // 1.前置检查
+    if (phoneController.text.isEmpty || codeController.text.isEmpty) {
+      PromptAction.showToast("手机号和验证码不能为空");
+      return;
+    }
+    if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(phoneController.text) || !RegExp(r'^\d{6}$').hasMatch(codeController.text)) {
+      PromptAction.showToast("手机号或验证码格式不正确");
+      return;
+    }
+    // 调用登录接口
+    final result = await loginApi({"mobile": phoneController.text, "code": codeController.text,});
+    // 存储token到全局状态
+    tokenManager.setToken(result["token"]);
+    PromptAction.showSuccess("登录成功");
+    Navigator.pop(context); // 返回上一个页面
   }
 
   // 销毁事件中的定时器
@@ -130,7 +150,9 @@ class LoginPageViewState extends State<LoginPage> {
                       minimumSize: const Size(100, 50),
                     ),
                     child: const Text('登录', style: TextStyle(color: Colors.white, fontSize: 20)),
-                    onPressed: () {}
+                    onPressed: () {
+                      login();
+                    }
                   )
                 )
               ],

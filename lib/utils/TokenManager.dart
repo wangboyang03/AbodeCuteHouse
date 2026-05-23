@@ -18,6 +18,7 @@ class TokenManager {
   Future<void> setToken(String token) async {
     final preferences = await getInstance(); // 获取实例
     preferences.setString(Constants.TOKEN_KEY, token);
+    this.token = token;
   }
 
   // 获取token
@@ -29,6 +30,7 @@ class TokenManager {
   Future<void> clearToken() async {
     final preferences = await getInstance(); // 获取实例
     preferences.remove(Constants.TOKEN_KEY);
+    token = "";
   }
 }
 

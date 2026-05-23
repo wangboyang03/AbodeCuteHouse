@@ -2,6 +2,8 @@ import 'package:abode_cute_house/pages/HomePage/index.dart';
 import 'package:abode_cute_house/pages/MinePage/index.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/TokenManager.dart';
+
 class TabsPage extends StatefulWidget {
   const TabsPage({Key? key}) : super(key: key);
   @override TabsPageState createState()=> TabsPageState();
@@ -21,6 +23,11 @@ class TabsPageState extends State<TabsPage> {
       'activeIcon': 'assets/tabs/my_active.png',
     }
   ];
+
+  @override void initState() {
+    super.initState();
+    tokenManager.init();
+  }
 
   // 实现底Tab布局的方法
   List <BottomNavigationBarItem> buildTabBar() {
