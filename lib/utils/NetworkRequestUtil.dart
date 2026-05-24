@@ -1,3 +1,4 @@
+import 'package:abode_cute_house/utils/EmitterUtil.dart';
 import 'package:dio/dio.dart';
 import '../constants/index.dart';
 import 'TokenManager.dart';
@@ -54,6 +55,10 @@ class NetworkRequestUtil {
         }
       },onError: (context, handler) {
         // 错误拦截器
+        if (context.response?.statusCode == 401) {
+          // 处理401问题 换token
+          PTEmitter.fire(LogoutEvent());
+        }
         handler.reject(context);
       }
     ));

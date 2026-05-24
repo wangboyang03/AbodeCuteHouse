@@ -23,7 +23,9 @@ Widget getRouterWidget() {
       if (token.isEmpty) {
         // 如果读不到token 直接去登录页
         return MaterialPageRoute(
-          builder: (context) => const LoginPage(),
+          builder: (context) => LoginPage(
+            toName: setting.name,
+          ),
         );
       }
       if (setting.name == "/profilePage") {

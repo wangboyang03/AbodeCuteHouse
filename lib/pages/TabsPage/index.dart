@@ -1,7 +1,9 @@
 import 'package:abode_cute_house/pages/HomePage/index.dart';
 import 'package:abode_cute_house/pages/MinePage/index.dart';
+import 'package:abode_cute_house/utils/EmitterUtil.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/CustomToastUtil.dart';
 import '../../utils/TokenManager.dart';
 
 class TabsPage extends StatefulWidget {
@@ -27,6 +29,15 @@ class TabsPageState extends State<TabsPage> {
   @override void initState() {
     super.initState();
     tokenManager.init();
+    registerEvent();
+  }
+
+  // 注册事件
+  registerEvent() {
+    PTEmitter.on<LogoutEvent>().listen((event) {
+      PromptAction.showSuccess("退出成功");
+      Navigator.pushNamed(context, "/loginPage"); // 跳转到登录页
+    });
   }
 
   // 实现底Tab布局的方法

@@ -1,5 +1,6 @@
 import 'package:abode_cute_house/api/user.dart';
 import 'package:abode_cute_house/utils/CustomToastUtil.dart';
+import 'package:abode_cute_house/utils/EmitterUtil.dart';
 import 'package:flutter/material.dart';
 
 class MineView extends StatefulWidget {
@@ -10,6 +11,18 @@ class MineView extends StatefulWidget {
 
 class _MineViewState extends State<MineView> {
   Map<String, dynamic> userInformationContent = {"id": "", "avatar": "", "nickName": ""};
+  @override void initState() {
+    super.initState();
+    registerEvent();
+  }
+
+  // 注册事件
+  registerEvent() {
+    PTEmitter.on<LoginSuccessEvent>().listen((params) {
+      getUserInformation();
+    });
+  }
+
   @override void didUpdateWidget(covariant MineView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.activeIndex == 1) {
@@ -20,6 +33,7 @@ class _MineViewState extends State<MineView> {
   // 获取用户信息
   getUserInformation() async {
     final result = await getUserInformationApi();
+    // print("接口返回的用户信息对象,$result");
     userInformationContent = result;
     PromptAction.showToast(userInformationContent["nickName"]);
     setState(() {}); // 响应式更新
@@ -27,7 +41,7 @@ class _MineViewState extends State<MineView> {
 
   // 获取用户头像和用户名
   Widget getUserAvatar() {
-    if (userInformationContent["avatar"]!= "") {
+    if (userInformationContent["avatar"]!= null && userInformationContent["avatar"] != "") {
       return Image.network(userInformationContent["avatar"], width: 50, height: 50, fit: BoxFit.cover);
     } else {
       return Image.asset('assets/images/avatar_1.jpg', width: 50, height: 50, fit: BoxFit.cover);

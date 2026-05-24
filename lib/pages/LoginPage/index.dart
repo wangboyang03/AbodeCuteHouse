@@ -4,10 +4,12 @@ import 'package:abode_cute_house/api/user.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/CustomToastUtil.dart';
+import '../../utils/EmitterUtil.dart';
 import '../../utils/TokenManager.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final String? toName;
+  const LoginPage({super.key, this.toName});
   @override State<LoginPage> createState() => LoginPageViewState();
 }
 
@@ -75,7 +77,13 @@ class LoginPageViewState extends State<LoginPage> {
     final result = await loginApi({"mobile": phoneController.text, "code": codeController.text,});
     // 存储token到全局状态
     tokenManager.setToken(result["token"], refreshToken: result["refreshToken"]);
+    PTEmitter.fire(LoginSuccessEvent());
     PromptAction.showSuccess("登录成功");
+    // 判断是否有需要跳转的页面
+    if (widget.toName != null) {
+      Navigator.pushNamed(context, widget.toName!);
+      return;
+    }
     Navigator.pop(context); // 返回上一个页面
   }
 

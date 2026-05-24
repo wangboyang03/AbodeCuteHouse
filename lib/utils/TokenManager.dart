@@ -21,8 +21,8 @@ class TokenManager {
     final preferences = await getInstance(); // 获取实例
     preferences.setString(Constants.TOKEN_KEY, token);
     preferences.setString(Constants.REFRESH_TOKEN_KEY, refreshToken ?? "");
-    token = token;
-    refreshToken = refreshToken ?? "";
+    this.token = token;
+    this.refreshToken = refreshToken ?? "";
   }
 
   // 获取token
