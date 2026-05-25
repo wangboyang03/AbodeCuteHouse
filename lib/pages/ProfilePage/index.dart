@@ -34,11 +34,78 @@ class ProfilePageState extends State<ProfilePage> {
     controller.updateUserInformation(controller.userInformation); // 更新用户共享状态 响应式更新
   }
 
+  showSelectDialog() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: 150,
+            width: double.infinity,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              children: [
+                getAvatarFromCamera(), // 现场拍照
+                getAvatarFromPhotos(), // 从图库选
+                getCancel(), // 关闭
+              ],
+            ),
+          );
+        });
+  }
+
   Widget getUserAvatar() {
     if (controller.userInformation["avatar"] != "" && controller.userInformation["avatar"] != null) {
       return Image.network(controller.userInformation["avatar"], width: 30, height: 30);
     }
     return Image.asset('assets/images/avatar_1.jpg', width: 30, height: 30);
+  }
+
+  // 点击头像弹出选择头像模态层
+  Widget getAvatarFromCamera() {
+    return SizedBox(
+      height: 50,
+      child: GestureDetector(
+        child: Container(
+          decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey, width: 0.5))),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Icon(Icons.camera_alt), SizedBox(width: 10), Text("拍照")]
+          )
+        ),
+        onTap: () {}
+      )
+    );
+  }
+
+  Widget getAvatarFromPhotos() {
+    return SizedBox(
+      height: 50,
+      child: GestureDetector(
+        child: Container(
+          decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey, width: 0.5))),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Icon(Icons.photo_library), SizedBox(width: 10), Text("相册")]
+          )
+        ),
+        onTap: () {}
+      ),
+    );
+  }
+
+  Widget getCancel() {
+    return GestureDetector(
+      child: const SizedBox(
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Icon(Icons.cancel), SizedBox(width: 10), Text("取消")]
+        )
+      ),
+      onTap: () {
+        Navigator.pop(context);
+      }
+    );
   }
 
   @override Widget build(BuildContext context) {
@@ -52,24 +119,29 @@ class ProfilePageState extends State<ProfilePage> {
       body: ListView(
         padding: EdgeInsets.all(10),
         children: [
-          SizedBox(
-            height: 40,
-            child: Row(
-              children: [
-                const Text('头像', style: TextStyle(fontSize: 16)),
-                const Spacer(),
-                Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      // child: Image.asset('assets/images/avatar.png', width: 30, height: 30)
-                      child: getUserAvatar(),
-                    ),
-                    const Icon(Icons.arrow_back_ios, size: 12)
-                  ]
-                )
-              ]
-            )
+          GestureDetector(
+            onTap: () {
+              showSelectDialog();
+            },
+            child: SizedBox(
+              height: 40,
+              child: Row(
+                children: [
+                  const Text('头像', style: TextStyle(fontSize: 16)),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        // child: Image.asset('assets/images/avatar.png', width: 30, height: 30)
+                        child: getUserAvatar(),
+                      ),
+                      const Icon(Icons.arrow_back_ios, size: 12)
+                    ]
+                  )
+                ]
+              )
+            ),
           ),
           Row(
             children: [
