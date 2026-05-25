@@ -1,4 +1,6 @@
+import 'package:abode_cute_house/controller/UserSharedController.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -6,6 +8,23 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
+  UserSharedcontroller controller = Get.find();
+  TextEditingController nickController = TextEditingController();
+
+  @override void initState() {
+    super.initState();
+    nickController.text = controller.userInformation["nickName"];
+  }
+  // 保存用户信息
+  saveUserInformation() {}
+
+  Widget getUserAvatar() {
+    if (controller.userInformation["avatar"] != "") {
+      return Image.network(controller.userInformation["avatar"], width: 30, height: 30);
+    }
+    return Image.asset('assets/images/avatar_1.jpg', width: 30, height: 30);
+  }
+
   @override Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +46,8 @@ class ProfilePageState extends State<ProfilePage> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(50),
-                      child: Image.asset('assets/images/avatar.png', width: 30, height: 30)
+                      // child: Image.asset('assets/images/avatar.png', width: 30, height: 30)
+                      child: getUserAvatar(),
                     ),
                     const Icon(Icons.arrow_back_ios, size: 12)
                   ]
@@ -35,17 +55,18 @@ class ProfilePageState extends State<ProfilePage> {
               ]
             )
           ),
-          const Row(
+          Row(
             children: [
-              Text('昵称'),
-              Spacer(),
+              const Text('昵称'),
+              const Spacer(),
               Expanded(
                 child: TextField(
-                  decoration: InputDecoration(hintText: '请输入昵称', border: InputBorder.none),
+                  controller: nickController,
+                  decoration: const InputDecoration(hintText: '请输入昵称', border: InputBorder.none),
                   textAlign: TextAlign.right,
                 ),
               ),
-              Icon(Icons.arrow_forward_ios, size: 12)
+              const Icon(Icons.arrow_forward_ios, size: 12)
             ]
           ),
           const SizedBox(height: 20),
@@ -57,7 +78,9 @@ class ProfilePageState extends State<ProfilePage> {
                     backgroundColor: const Color.fromARGB(255, 85, 145, 175),
                     minimumSize: const Size(100, 50),
                   ),
-                  onPressed: () {},
+                  onPressed: () {  
+                    saveUserInformation();
+                  },
                   child: const Text('保存', style: TextStyle(color: Colors.white, fontSize: 20)),
                 )
               )

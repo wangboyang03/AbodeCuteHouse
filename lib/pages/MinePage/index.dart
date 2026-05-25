@@ -3,6 +3,8 @@ import 'package:abode_cute_house/utils/CustomToastUtil.dart';
 import 'package:abode_cute_house/utils/EmitterUtil.dart';
 import 'package:abode_cute_house/utils/TokenManager.dart';
 import 'package:flutter/material.dart';
+import 'package:abode_cute_house/controller/UserSharedController.dart';
+import 'package:get/get.dart';
 
 class MineView extends StatefulWidget {
   final int? activeIndex;
@@ -11,7 +13,8 @@ class MineView extends StatefulWidget {
 }
 
 class _MineViewState extends State<MineView> {
-  Map<String, dynamic> userInformationContent = {"id": "", "avatar": "", "nickName": ""};
+  // Map<String, dynamic> userInformationContent = {"id": "", "avatar": "", "nickName": ""};
+  UserSharedcontroller controller = Get.put(UserSharedcontroller()); // 放入共享实例对象
   @override void initState() {
     super.initState();
     registerEvent();
@@ -35,26 +38,31 @@ class _MineViewState extends State<MineView> {
   getUserInformation() async {
     final result = await getUserInformationApi();
     // print("接口返回的用户信息对象,$result");
-    userInformationContent = result;
-    PromptAction.showToast(userInformationContent["nickName"]);
-    setState(() {}); // 响应式更新
+    // userInformationContent = result;
+    // PromptAction.showToast(userInformationContent["nickName"]);
+    // setState(() {}); // 响应式更新
+    controller.updateUserInformation(result);
   }
 
   // 获取用户头像和用户名
   Widget getUserAvatar() {
-    if (userInformationContent["avatar"]!= null && userInformationContent["avatar"] != "") {
-      return Image.network(userInformationContent["avatar"], width: 50, height: 50, fit: BoxFit.cover);
+    if (controller.userInformation["avatar"]!= null && controller.userInformation["avatar"] != "") {
+      return Image.network(controller.userInformation["avatar"], width: 50, height: 50, fit: BoxFit.cover);
     } else {
       return Image.asset('assets/images/avatar_1.jpg', width: 50, height: 50, fit: BoxFit.cover);
     }
   }
 
   String getUserNickName() {
-    String? nickName = userInformationContent["nickName"];
-    if (nickName == null || nickName.isEmpty) {
-      return "用户名";
+    // String? nickName = userInformationContent["nickName"];
+    // if (nickName == null || nickName.isEmpty) {
+    //   return "用户名";
+    // }
+    // return nickName;
+    if (controller.userInformation["nickName"] != null && controller.userInformation["nickName"] != "") {
+      return controller.userInformation["nickName"];
     }
-    return nickName;
+    return "用户名";
   }
 
   logout() {
@@ -68,8 +76,9 @@ class _MineViewState extends State<MineView> {
             onPressed: () {
               // 退登逻辑
               tokenManager.clearToken();
-              userInformationContent = {"id": "", "avatar": "", "nickName": ""};
-              setState(() {});
+              // userInformationContent = {"id": "", "avatar": "", "nickName": ""};
+              // setState(() {});
+              controller.updateUserInformation({"avatar": "", "nickName": "", "id": ''});
               Navigator.pop(context);
             },
           ),
@@ -162,7 +171,7 @@ class _MineViewState extends State<MineView> {
 
   // 4.退登按钮
   Widget? logoutButton() {
-    if ((userInformationContent["id"] as String).isEmpty) {
+    if ((controller.userInformation["id"] as String).isEmpty) {
       return null;
     }
     return Container(
@@ -191,26 +200,28 @@ class _MineViewState extends State<MineView> {
   }
 
   @override Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF78B1C5),
-      body: SafeArea(
-        top: false, // 让背景色侵入顶部安全区域
-        child: Column(
-          children: [
-            // 添加一个标题区域，替代AppBar
-            Container(width: double.infinity, padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 10, bottom: 10),
-              color: const Color(0xFF78B1C5),
-              child: const Center(
-                child: Text("我的", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+    return GetBuilder<UserSharedcontroller>(builder: (controller) {
+      return Scaffold(
+        backgroundColor: const Color(0xFF78B1C5),
+        body: SafeArea(
+          top: false, // 让背景色侵入顶部安全区域
+          child: Column(
+            children: [
+              // 添加一个标题区域，替代AppBar
+              Container(width: double.infinity, padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 10, bottom: 10),
+                color: const Color(0xFF78B1C5),
+                child: const Center(
+                  child: Text("我的", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-            ),
-            buildTopWidget(),
-            CellGroupItemWidget(),
-            logoutButton() ?? const SizedBox()
-          ],
+              buildTopWidget(),
+              CellGroupItemWidget(),
+              logoutButton() ?? const SizedBox()
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

@@ -44,6 +44,7 @@ dependencies:
       url: "https://gitcode.com/openharmony-sig/flutter_packages.git" # 鸿蒙化仓库地址
       path: "packages/shared_preferences/shared_preferences"
   event_bus: ^2.0.1
+  get: ^4.7.3
 
 dev_dependencies:
   flutter_test:
