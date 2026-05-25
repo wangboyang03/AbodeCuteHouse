@@ -7,4 +7,4 @@ Future<dynamic> loginApi(data)=> networkRequestUtil.post(HTTP_API.LOGIN, data: d
 
 Future<dynamic> getUserInformationApi()=> networkRequestUtil.get(HTTP_API.GET_USER_INFORMATION); // 获取用户信息接口
 
-Future updateUserInfoAPI(data) => networkRequestUtil.put(HTTP_API.GET_USER_INFORMATION, data: data); // 更新用户信息接口
+Future updateUserInformationApi(data) => networkRequestUtil.put(HTTP_API.GET_USER_INFORMATION, data: data); // 更新用户信息接口

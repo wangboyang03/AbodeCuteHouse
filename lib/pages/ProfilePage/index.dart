@@ -1,6 +1,9 @@
+import 'package:abode_cute_house/api/user.dart';
 import 'package:abode_cute_house/controller/UserSharedController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../utils/CustomToastUtil.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,13 +16,26 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override void initState() {
     super.initState();
-    nickController.text = controller.userInformation["nickName"];
+    nickController.text = controller.userInformation["nickName"] ?? "";
   }
   // 保存用户信息
-  saveUserInformation() {}
+  saveUserInformation() async {
+    if (nickController.text.isEmpty) {
+      PromptAction.showToast("用户昵称不能为空");
+      return;
+    }
+    if (!RegExp(r'^[\u4e00-\u9fa5]{2,10}').hasMatch(nickController.text)) {
+      PromptAction.showToast("昵称必须是2-10个中文字符");
+      return;
+    }
+    await updateUserInformationApi({"nickName": nickController.text});
+    PromptAction.showSuccess("用户资料保存成功");
+    controller.userInformation["nickName"] = nickController.text; // 更新对象里面的属性
+    controller.updateUserInformation(controller.userInformation); // 更新用户共享状态 响应式更新
+  }
 
   Widget getUserAvatar() {
-    if (controller.userInformation["avatar"] != "") {
+    if (controller.userInformation["avatar"] != "" && controller.userInformation["avatar"] != null) {
       return Image.network(controller.userInformation["avatar"], width: 30, height: 30);
     }
     return Image.asset('assets/images/avatar_1.jpg', width: 30, height: 30);
