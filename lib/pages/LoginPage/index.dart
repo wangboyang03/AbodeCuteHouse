@@ -23,7 +23,7 @@ class LoginPageViewState extends State<LoginPage> {
   // 开始请求倒计时
   Future<void> beginCountDown() async {
     // 前置检查
-    if (!!isSending) {
+    if (isSending) {
       return;
     }
     if (phoneController.text.isEmpty) {
@@ -76,12 +76,12 @@ class LoginPageViewState extends State<LoginPage> {
     // 调用登录接口
     final result = await loginApi({"mobile": phoneController.text, "code": codeController.text,});
     // 存储token到全局状态
-    tokenManager.setToken(result["token"], refreshToken: result["refreshToken"]);
+    await tokenManager.setToken(result["token"], refreshToken: result["refreshToken"]);
     PTEmitter.fire(LoginSuccessEvent());
     PromptAction.showSuccess("登录成功");
     // 判断是否有需要跳转的页面
     if (widget.toName != null) {
-      Navigator.pushNamed(context, widget.toName!);
+      Navigator.pushReplacementNamed(context, widget.toName!);
       return;
     }
     Navigator.pop(context); // 返回上一个页面

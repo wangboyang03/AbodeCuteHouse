@@ -1,6 +1,7 @@
 import 'package:abode_cute_house/api/user.dart';
 import 'package:abode_cute_house/utils/CustomToastUtil.dart';
 import 'package:abode_cute_house/utils/EmitterUtil.dart';
+import 'package:abode_cute_house/utils/TokenManager.dart';
 import 'package:flutter/material.dart';
 
 class MineView extends StatefulWidget {
@@ -54,6 +55,33 @@ class _MineViewState extends State<MineView> {
       return "用户名";
     }
     return nickName;
+  }
+
+  logout() {
+    showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: Text("提示"),
+        content: Text("您确定要退出登录吗?"),
+        actions: [
+          TextButton(
+            child: Text("确定"),
+            onPressed: () {
+              // 退登逻辑
+              tokenManager.clearToken();
+              userInformationContent = {"id": "", "avatar": "", "nickName": ""};
+              setState(() {});
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text("取消"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    });
   }
 
   // 1.顶部区域
@@ -132,6 +160,26 @@ class _MineViewState extends State<MineView> {
     );
   }
 
+  // 4.退登按钮
+  Widget? logoutButton() {
+    if ((userInformationContent["id"] as String).isEmpty) {
+      return null;
+    }
+    return Container(
+      height: 60,
+      width: double.infinity, // 占满全屏
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center, // 居中对齐
+        children: [
+          GestureDetector(
+            child: Text("退出登录", style: TextStyle(color: Colors.red, fontSize: 18)),
+            onTap: () {logout();}
+          )
+        ],
+      ),
+    );
+  }
+
   // 标题区域
   Widget buildTitleWidget() {
     return Container(
@@ -159,6 +207,7 @@ class _MineViewState extends State<MineView> {
             ),
             buildTopWidget(),
             CellGroupItemWidget(),
+            logoutButton() ?? const SizedBox()
           ],
         ),
       ),

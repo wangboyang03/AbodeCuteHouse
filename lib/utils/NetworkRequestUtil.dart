@@ -30,6 +30,14 @@ class NetworkRequestUtil {
     throw DioException(requestOptions: result.requestOptions); // rejected
   }
 
+  // 刷新token
+  refreshTokenFunction() async {
+    String refreshToken = tokenManager.getRefreshToken(); // 获取本地存储的refreshToken
+    Dio newRequest = Dio(); // 重新创建一个请求工具
+    final result = await newRequest.post('${Constants.BASE_URL}refreshToken', options: Options(headers: {"Authorization": 'Bearer ${refreshToken}'}));
+    tokenManager.setToken(result.data["data"]["token"], refreshToken: result.data["data"]["refreshToken"]);
+  }
+
   NetworkRequestUtil() {
     dio.options.baseUrl = Constants.BASE_URL;
     dio.options.connectTimeout = const Duration(seconds: Constants.NEW_WORK_TIME_OUT);
@@ -53,10 +61,21 @@ class NetworkRequestUtil {
           // 响应失败了
           handler.reject(DioException(requestOptions: context.requestOptions));
         }
-      },onError: (context, handler) {
+      },onError: (context, handler) async {
         // 错误拦截器
         if (context.response?.statusCode == 401) {
           // 处理401问题 换token
+          String refreshToken = tokenManager.getRefreshToken(); // 获取本地存储的refreshToken
+          if (!refreshToken.isEmpty) {
+            try {
+              await refreshTokenFunction();
+              return handler.resolve(await dio.fetch(context.requestOptions));
+            } catch (error) {
+              // 出错了 删除本地token然后退登
+              tokenManager.clearToken();
+              PTEmitter.fire(LogoutEvent());
+            }
+          }
           PTEmitter.fire(LogoutEvent());
         }
         handler.reject(context);
