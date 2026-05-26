@@ -4,7 +4,10 @@ import 'package:abode_cute_house/api/user.dart';
 import 'package:abode_cute_house/controller/UserSharedController.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+// 当导入的两个及以上三方插件库且均有相同名字的接口方法时 需要把另一个不需要的接口hide(隐藏)掉 避免编译器识别错误
+import 'package:get/get.dart'
+    hide FormData, MultipartFile; // 隐藏Get包中的FormData和MultipartFile
+import 'package:dio/dio.dart'; // 使用Dio包中的FormData和MultipartFile
 import 'package:image_picker/image_picker.dart';
 
 import '../../utils/CustomToastUtil.dart';
@@ -35,6 +38,14 @@ class ProfilePageState extends State<ProfilePage> {
     if (!RegExp(r'^[\u4e00-\u9fa5]{2,10}').hasMatch(nickController.text)) {
       PromptAction.showToast("昵称必须是2-10个中文字符");
       return;
+    }
+
+    // 判断是否需要上传头像
+    if (!tempAvatar.isEmpty) {
+      // 用户选择了头像需要上传
+      FormData data = FormData.fromMap(
+          {"file": await MultipartFile.fromFile(tempAvatar), "type": "avatar"});
+      uploadAvatarApi(data);
     }
     await updateUserInformationApi({"nickName": nickController.text});
     PromptAction.showSuccess("用户资料保存成功");
