@@ -22,6 +22,7 @@ class ProfilePageState extends State<ProfilePage> {
   UserSharedcontroller controller = Get.find();
   TextEditingController nickController = TextEditingController();
   String tempAvatar = ""; // 临时存储头像
+  String tempFileName = ""; // 临时存储头像的文件名
 
   @override
   void initState() {
@@ -39,17 +40,33 @@ class ProfilePageState extends State<ProfilePage> {
       PromptAction.showToast("昵称必须是2-10个中文字符");
       return;
     }
-
+    var avatar = controller.userInformation["avatar"] ?? "";
     // 判断是否需要上传头像
     if (!tempAvatar.isEmpty) {
+      FormData? data;
       // 用户选择了头像需要上传
-      FormData data = FormData.fromMap(
-          {"file": await MultipartFile.fromFile(tempAvatar), "type": "avatar"});
-      uploadAvatarApi(data);
+      if (kIsWeb) {
+        Uint8List list = await XFile(tempAvatar).readAsBytes(); // 读取二进制
+        MultipartFile file =
+            MultipartFile.fromBytes(list, filename: tempFileName); // 得到的文件对象
+        data = FormData.fromMap({"file": file, "type": "avatar"});
+      } else {
+        // 移动端平台
+        data = FormData.fromMap(
+            {"file": MultipartFile.fromFileSync(tempAvatar), "type": 'avatar'});
+      }
+
+      final result = await uploadAvatarApi(data);
+      avatar = result["url"]; // 上传成功后返回的url
     }
-    await updateUserInformationApi({"nickName": nickController.text});
+    await updateUserInformationApi(
+        {"nickName": nickController.text, "avatar": avatar});
+    // 清理临时变量
+    tempAvatar = "";
+    tempFileName = "";
     PromptAction.showSuccess("用户资料保存成功");
     controller.userInformation["nickName"] = nickController.text; // 更新对象里面的属性
+    controller.userInformation["avatar"] = avatar; // 更新对象里面的属性
     controller
         .updateUserInformation(controller.userInformation); // 更新用户共享状态 响应式更新
   }
@@ -93,7 +110,8 @@ class ProfilePageState extends State<ProfilePage> {
     XFile? file = await picker.pickImage(source: ImageSource.gallery);
     if (file != null) {
       // PromptAction.showSuccess("选择照片成功");
-      tempAvatar = file.path;
+      tempAvatar = file.path; // 文件路径
+      tempFileName = file.name; // 文件名称
       setState(() {});
       Navigator.pop(context);
     }
