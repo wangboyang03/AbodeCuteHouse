@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+// import '../pages/HomePage/components/homepageList.dart';
 import '../pages/LoginPage/index.dart';
+import '../pages/NotFoundPage/NotFoundPage.dart';
 import '../pages/NotificationDetailsPage/index.dart';
 import '../pages/ProfilePage/index.dart';
 import '../pages/TabsPage/index.dart';
@@ -33,7 +35,9 @@ Widget getRouterWidget() {
           builder: (context) => const ProfilePage(),
         );
       }
-      return null;
+      return MaterialPageRoute(
+        builder: (context) => const NotFoundPage(),
+      );
     }
   );
 }
