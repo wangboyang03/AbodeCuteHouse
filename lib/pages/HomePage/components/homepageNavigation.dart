@@ -11,21 +11,32 @@ class HomePageNavigation extends StatefulWidget {
     final List _navigationList = [
       {
         'icon': 'assets/images/house_nav_icon@2x.png',
+        "name": "house",
         'title': '我的房子'
       },
       {
         'icon': 'assets/images/repair_nav_icon@2x.png',
+        "name": "repair",
         'title': '我的报修'
       },
       {
         'icon': 'assets/images/visitor_nav_icon@2x.png',
+        "name": "visitor",
         'title': '访客登记'
       }
     ];
     
     List<Widget> getNavigationListWidget() {
       return _navigationList.map((item) {
-        return NavigationColumn(icon: item['icon'], title: item['title']);
+        return NavigationColumn(
+          icon: item['icon'],
+          title: item['title'],
+          onClick: () {
+            if (item["name"] == "house") {
+              Navigator.pushNamed(context, "/houselist");
+            }
+          },
+        );
       }).toList();
     }
 

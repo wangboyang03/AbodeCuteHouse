@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 // import '../pages/HomePage/components/homepageList.dart';
+import '../pages/HousePage/HouseList.dart';
+import '../pages/LocationPage/LocationList.dart';
 import '../pages/LoginPage/index.dart';
 import '../pages/NotFoundPage/NotFoundPage.dart';
 import '../pages/NotificationDetailsPage/index.dart';
@@ -31,13 +33,12 @@ Widget getRouterWidget() {
         );
       }
       if (setting.name == "/profilePage") {
-        return MaterialPageRoute(
-          builder: (context) => const ProfilePage(),
-        );
+        return MaterialPageRoute(builder: (context) => const ProfilePage());
       }
-      return MaterialPageRoute(
-        builder: (context) => const NotFoundPage(),
-      );
+      if (setting.name == "/houselist") {
+        return MaterialPageRoute(builder: (context) => const HouseList());
+      }
+      return MaterialPageRoute(builder: (context) => const NotFoundPage());
     }
   );
 }
