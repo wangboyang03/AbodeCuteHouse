@@ -13,4 +13,5 @@ class HTTP_API {
   static const String LOGIN = "/login"; // 登录地址
   static const String GET_USER_INFORMATION = "/userInfo"; // 获取用户信息接口
   static const String UPLOAD_RESOURCE = '/upload'; // 上传资源接口
+  static const String HOUSE_LIST = '/room'; // 房屋列表接口
 }

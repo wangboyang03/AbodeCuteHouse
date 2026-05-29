@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class HouseItem extends StatefulWidget {
-  const HouseItem({super.key});
+  const HouseItem({super.key, required this.data});
+  final Map<String, dynamic> data;
+
   @override State<HouseItem> createState() => HouseItemState();
 }
 
@@ -13,7 +15,7 @@ class HouseItemState extends State<HouseItem> {
       child: Column(
         children: [
           Row(children: [
-              const Expanded(child: Text('仙基公寓')),
+              Expanded(child: Text(widget.data["point"] ?? "暂无小区")),
               const Spacer(),
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
@@ -22,20 +24,20 @@ class HouseItemState extends State<HouseItem> {
               )
             ],
           ),
-          const SizedBox(height: 15),
-          const Row(
+          SizedBox(height: 15),
+          Row(
             children: [
               Text('房间号', style: TextStyle(color: Colors.grey)),
               Spacer(),
-              Expanded(child: Text('1栋2003室', textAlign: TextAlign.right))
+              Expanded(child: Text('${widget.data["building"]}${widget.data["room"]}', textAlign: TextAlign.right))
             ],
           ),
-          const SizedBox(height: 15),
-          const Row(
+          SizedBox(height: 15), 
+          Row(
             children: [
               Text('业主', style: TextStyle(color: Colors.grey)),
               Spacer(),
-              Expanded(child: Text('张继科', textAlign: TextAlign.right))
+              Expanded(child: Text(widget.data["name"], textAlign: TextAlign.right))
             ],
           ),
         ],
